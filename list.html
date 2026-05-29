@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Liste des clients - Gestalist</title>
+    <link rel="stylesheet" href="design.css">
+</head>
+
+<body>
+    <div class="nav">
+        <ul>
+            <li><a href="index.html" class="logo-link"><img src="glist_logo.png" alt="Gestalist" class="nav-logo"></a></li>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="list.html">Liste des clients</a></li>
+        </ul>
+    </div>
+
+    <div class="container clients-container">
+        <fieldset>
+            <h1>Liste des clients</h1>
+            <p id="clients-message" class="message">Chargement des clients...</p>
+
+            <div class="table-wrapper">
+                <table class="clients-table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clients-list"></tbody>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+
+    <div id="obj-popup" class="obj-popup" aria-hidden="true">
+        <div class="obj-popup-content">
+            <button type="button" id="obj-popup-close" class="obj-popup-close" aria-label="Fermer">X</button>
+            <h2>Objet</h2>
+            <p id="obj-popup-text"></p>
+            <p class="obj-popup-date">Enregistré le : <span id="obj-popup-date"></span></p>
+            <a id="obj-email-link" class="obj-email-link" href="#" target="_blank" rel="noopener">Envoyer un mail</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-link">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V24h-4V8zm7.5 0h3.8v2.2h.1c.5-1 1.9-2.5 4-2.5 4.3 0 5.1 2.8 5.1 6.5V24h-4v-8.7c0-2.1 0-4.7-2.9-4.7s-3.3 2.2-3.3 4.5V24h-4V8z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook" class="social-link">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12.1C22 6.5 17.5 2 12 2S2 6.5 2 12.1c0 5 3.7 9.1 8.4 9.9v-7h-2.5v-2.9h2.5V9.9c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9h2.8l-.4 2.9h-2.4v7c4.8-.8 8.5-4.9 8.5-10z"/></svg>
+        </a>
+        <a href="https://www.whatsapp.com/" target="_blank" rel="noopener" aria-label="WhatsApp" class="social-link">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 12.1 0C5.5 0 .2 5.3.2 11.8c0 2.1.6 4.1 1.6 5.9L0 24l6.5-1.7c1.7.9 3.6 1.4 5.6 1.4 6.5 0 11.8-5.3 11.8-11.8 0-3.2-1.2-6.1-3.4-8.4zM12.1 21.7c-1.8 0-3.5-.5-5-1.3l-.4-.2-3.8 1 1-3.7-.2-.4c-1-1.6-1.5-3.4-1.5-5.3 0-5.4 4.4-9.8 9.9-9.8 2.6 0 5.1 1 7 2.9 1.9 1.9 2.9 4.3 2.9 7 0 5.4-4.5 9.8-9.9 9.8zm5.4-7.3c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-1 1.1-.2.2-.4.2-.7.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.3-.6-.4z"/></svg>
+        </a>
+    </footer>
+    <div class="help-widget">
+        <button type="button" class="help-button" aria-label="Afficher l'aide">+</button>
+        <p class="help-text">Ici se trouve la liste des enregistrés, tu peux voir l'objet de leurs entretiens, et leur envoyer un mail si besoin il y a !</p>
+    </div>
+
+    <script>
+        const message = document.getElementById('clients-message');
+        const clientsList = document.getElementById('clients-list');
+        const popup = document.getElementById('obj-popup');
+        const popupText = document.getElementById('obj-popup-text');
+        const popupDate = document.getElementById('obj-popup-date');
+        const popupClose = document.getElementById('obj-popup-close');
+        const popupEmailLink = document.getElementById('obj-email-link');
+        const helpButton = document.querySelector('.help-button');
+        const helpText = document.querySelector('.help-text');
+        let hoverTimer = null;
+
+        function openObjPopup(client) {
+            const createdAt = client.created_at || 'Date non renseignée';
+
+            popupText.textContent = client.obj || 'Aucun objet renseigné.';
+            popupDate.textContent = createdAt;
+            popupEmailLink.href = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(client.email)}`;
+            popup.classList.add('is-visible');
+            popup.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeObjPopup() {
+            clearTimeout(hoverTimer);
+            popup.classList.remove('is-visible');
+            popup.setAttribute('aria-hidden', 'true');
+        }
+
+        popupClose.addEventListener('click', closeObjPopup);
+        popup.addEventListener('click', (event) => {
+            if (event.target === popup) {
+                closeObjPopup();
+            }
+        });
+
+        helpButton.addEventListener('click', () => {
+            helpText.classList.toggle('is-visible');
+        });
+
+        fetch('clients.php')
+            .then((response) => {
+                return response.json().then((data) => {
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Impossible de récupérer les clients.');
+                    }
+
+                    return data;
+                });
+            })
+            .then((clients) => {
+                clientsList.innerHTML = '';
+
+                if (clients.length === 0) {
+                    message.textContent = 'Aucun client enregistré.';
+                    return;
+                }
+
+                message.textContent = '';
+
+                clients.forEach((client) => {
+                    const row = document.createElement('tr');
+                    const nom = document.createElement('td');
+                    const prenom = document.createElement('td');
+                    const email = document.createElement('td');
+
+                    nom.textContent = client.nom;
+                    prenom.textContent = client.prenom;
+                    email.textContent = client.email;
+
+                    row.addEventListener('mouseenter', () => {
+                        hoverTimer = setTimeout(() => {
+                            openObjPopup(client);
+                        }, 1500);
+                    });
+
+                    row.addEventListener('mouseleave', () => {
+                        clearTimeout(hoverTimer);
+                    });
+
+                    row.append(nom, prenom, email);
+                    clientsList.appendChild(row);
+                });
+            })
+            .catch((error) => {
+                message.textContent = error.message;
+            });
+    </script>
+</body>
+</html>
